@@ -1,1 +1,20 @@
 /* You can add global styles to this file, and also import other style files */
+
+
+/*Insert this style in your css*/
+.fontAwesome {
+  font-family: Helvetica, 'Font Awesome 5 pro', sans-serif;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.date:hover {
+    cursor: pointer;
+}
+
+
+._icon:hover{
+  font-size:1.6em;
+  transition: .2s ease-out;
+}
