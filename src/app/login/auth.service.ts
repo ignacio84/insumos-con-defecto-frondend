@@ -62,6 +62,8 @@ export class AuthService {
 
   //METODO LIMPIA DATOS DE SESSION STORAGE
   public logOut(): void {
+    console.log();
     sessionStorage.clear();
+
   }
 }
