@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { AppSettings } from '../AppSettings';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Usuario } from '../pages/models-scanner/usuario'
+import { Role } from '../pages/models-scanner/role';
 
 @Injectable({
   providedIn: 'root'
 })
-export class LoginService {
+export class AuthService {
 
   constructor(private http: HttpClient) { }
 
@@ -24,6 +25,7 @@ export class LoginService {
       .toPromise();
   }
 
+  //GUARDA TOKEN EN EL SESSION STORAGE
   public saveTockenInSessionStorage(data: any): void {
     sessionStorage.setItem('access_token', data.access_token);//convierte Objeto a JSON
     sessionStorage.setItem('refresh_token', data.refresh_token);//convierte Objeto a JSON
@@ -31,9 +33,35 @@ export class LoginService {
     this.saveUserInSessionStorage(JSON.parse(atob(data.access_token.split(".")[1])));
   }
 
+  //GUARDA USUARIO EN EL SESSION STORAGE
   private saveUserInSessionStorage(payload: any) {
     let usuario = new Usuario();
     usuario.userFromPayload(payload);
     sessionStorage.setItem('usuario', JSON.stringify(usuario));//Convierte objeto JSON y lo guarda en el session sessionStorage
+  }
+
+  //METODO VALIDA USUARIO LOGEADO OBTIENE IFORMACION DEL SESSION STORAGE
+  public isLogin(): boolean {
+    return JSON.parse(sessionStorage.getItem('usuario')) ? true : false;//Valida sesion del usuario
+  }
+
+  //OBTIENE USUARIO LOGEADO, OBTIENE IFORMACION DEL SESSION STORAGE
+  public getUser(): Usuario {
+    return JSON.parse(sessionStorage.getItem('usuario')) as Usuario;
+  }
+
+  //OBTIENE LOS ROLES DEL USUARIOS, OBTIENE IFORMACION DEL SESSION STORAGE
+  public getRolesUser(): Role[] {
+    return this.getUser().roles;
+  }
+
+  //VALIDA QUE EL SUARIO TENGA AL MENOS UN ROL DEL LISTADO DE ROLES RECIBIDOS
+  public validRoles(roles: string[]): boolean {
+    return this.getRolesUser().some(r => roles.find(x => x.toString() == r.toString()));
+  }
+
+  //METODO LIMPIA DATOS DE SESSION STORAGE
+  public logOut(): void {
+    sessionStorage.clear();
   }
 }

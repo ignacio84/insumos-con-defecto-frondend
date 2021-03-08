@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { LoginService } from './login.service';
+import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
@@ -15,7 +15,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    public loginService: LoginService,
+    public authService: AuthService,
     private router: Router
   ) {
     this.buildForm();
@@ -34,10 +34,10 @@ export class LoginComponent implements OnInit {
   }
 
   public login(): void {
-    this.loginService.login(this.formulario.get('username').value, this.formulario.get('userpass').value)
+    this.authService.login(this.formulario.get('username').value, this.formulario.get('userpass').value)
       .then(
         data => {
-          this.loginService.saveTockenInSessionStorage(data);
+          this.authService.saveTockenInSessionStorage(data);
           this.router.navigate(['/con-ins']);
         })
       .catch(
