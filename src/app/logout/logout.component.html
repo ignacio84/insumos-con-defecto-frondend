@@ -1,0 +1,8 @@
+<div class="dropdown">
+  <a class="btn btn-outline-dark dropdown-toggle logout" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <i class="fad fa-user-friends fa-lg"></i> {{this.usuario.username}}
+  </a>
+  <div class="dropdown-menu logout-drop" aria-labelledby="dropdownMenuLink" style="padding=0;">
+    <button class="dropdown-item btn pl-1 btn-dark" (click)="logout()" type="submit"><i class="fad fa-user-lock"></i> Cerrar Sesion</button>
+  </div>
+</div>

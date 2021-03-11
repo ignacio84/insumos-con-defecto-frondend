@@ -1,0 +1,25 @@
+<div class="container">
+  <table class="table table-hover bt-0 text-center" *ngIf="this.insumosInterface.length>0">
+    <!-- <thead class="thead bt-0">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col"></th>
+        <th scope="col">Last</th>
+      </tr>
+    </thead> -->
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">CÓDIGO</th>
+        <th scope="col">DESCRIPCIÓN</th>
+        <th scope="col">CANTIDAD</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let insumoInterface of this.insumosInterface">
+        <th scope="row">{{insumoInterface.code}}</th>
+        <td>{{insumoInterface.descripcion}}</td>
+        <th scope="row">{{insumoInterface.quantity}}</th>
+      </tr>
+    </tbody>
+  </table>
+</div>

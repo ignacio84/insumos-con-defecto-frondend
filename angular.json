@@ -34,17 +34,16 @@
               "src/assets/js/jquery-3.2.1.min.js",
               "src/assets/js/popper.min.js",
               "src/assets/js/bootstrap.min.js",
-              "src/assets/js/script.js"
+              "src/assets/js/script.js",
+              "node_modules/crypto-js/crypto-js.js"
             ]
           },
           "configurations": {
             "production": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
+              "fileReplacements": [{
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.prod.ts"
+              }],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -53,8 +52,7 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
-              "budgets": [
-                {
+              "budgets": [{
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "5mb"
@@ -107,7 +105,8 @@
               "src/assets/js/jquery-3.2.1.min.js",
               "src/assets/js/popper.min.js",
               "src/assets/js/bootstrap.min.js",
-              "src/assets/js/script.js"
+              "src/assets/js/script.js",
+              "node_modules/crypto-js/crypto-js.js"
             ]
           }
         },

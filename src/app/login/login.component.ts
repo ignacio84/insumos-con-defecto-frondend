@@ -22,6 +22,9 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // console.log(CryptoJS.AES.encrypt('hola', 'hola').toString())
+    // console.log(CryptoJS.AES.decrypt('U2FsdGVkX1/jVUDoIn1UptfvD/ch5meZ8iZNu6Ucb5M=', 'hola').toString(CryptoJS.enc.Utf8));
+
   }
 
   private buildForm(): void {
@@ -37,12 +40,11 @@ export class LoginComponent implements OnInit {
     this.authService.login(this.formulario.get('username').value, this.formulario.get('userpass').value)
       .then(
         data => {
-          this.authService.saveTockenInSessionStorage(data);
+          this.authService.saveUser(data);
           this.router.navigate(['/con-ins']);
         })
       .catch(
         error => {
-          console.log(error);
           Swal.fire('Error', 'Usuario o contraseña no validos!', 'error');
         }
       )

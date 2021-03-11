@@ -7,12 +7,15 @@ import { ConsultarInsumosComponent } from './consultar-insumos/consultar-insumos
 import { MainComponent } from './main/main.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { FormConInsComponent } from './consultar-insumos/form-con-ins/form-con-ins.component';
+import { TableConInsComponent } from './consultar-insumos/table-con-ins/table-con-ins.component';
+import { LogoutComponent } from '../logout/logout.component';
 
 
 @NgModule({
   declarations: [
     LoginComponent,//COMPONENTE LOGIN,
-    ConsultarInsumosComponent, MainComponent
+    ConsultarInsumosComponent, MainComponent, FormConInsComponent, TableConInsComponent, LogoutComponent
   ],
   imports: [
     CommonModule,

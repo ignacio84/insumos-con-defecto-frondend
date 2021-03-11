@@ -29,28 +29,15 @@ export class RoleGuard implements CanActivate, CanLoad {
 
   //valida usuario con sesion iniciada y permisos de usuarios
   private validations(roles: any): boolean {
-    if (!this.authService.isLogin()) {
+    if (!this.authService.getUser()) {
       Swal.fire('Error', 'Favor de inciar sesión', 'error');
       this.router.navigate(['/login']);
       return false;
     }
-    if (!this.authService.validRoles(roles)) {//Valida permiso del usuario (roles permitidos)
-      Swal.fire('Error', 'Favor de inciar sesión', 'error');
-      return true;
+    if (!this.authService.getUserRoles().some(r => roles.find(x => x.toString() == r.toString()))) {//Valida permiso del usuario (roles permitidos)
+      Swal.fire('Error', 'No cuenta con autorización!!', 'error');
+      return false;
     }
-    //
-    //
-    //
-    // if (this.authService.isLogin()) {//Valida sesion del usuario
-    //   if (this.authService.validRoles(roles)) {//Valida permiso del usuario (roles permitidos)
-    //     Swal.fire('Error', 'Favor de inciar sesión', 'error');
-    //     return true;
-    //   }
-    // } else {
-    //   Swal.fire('Error', 'No cuenta con los permisos necesarios', 'error');
-    //
-    //   this.router.navigate(['/login']);
-    //   return false;
-    // }
+    return true;
   }
 }

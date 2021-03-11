@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { AppSettings } from '../AppSettings';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Usuario } from '../pages/models-scanner/usuario'
+import { SessionStorageService } from '../security/crypt/sessionStorage.service'
+import { env } from "../../environments/environment"
 import { Role } from '../pages/models-scanner/role';
 
 @Injectable({
@@ -9,10 +10,15 @@ import { Role } from '../pages/models-scanner/role';
 })
 export class AuthService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+    private sessionService: SessionStorageService
+  ) {
+  }
 
   public login(username: string, userpass: string) {
-    const credenciales = btoa(AppSettings.APP_CLIENT + ':' + AppSettings.APP_PASSWORD);
+
+
+    const credenciales = btoa(`${env.APP_CLIENT}:${env.APP_PASSWORD}`);
     const httpHeaders = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': 'Basic ' + credenciales });
     let params = new URLSearchParams();
     params.set('grant_type', 'password');
@@ -20,50 +26,31 @@ export class AuthService {
     params.set('password', userpass);
     return this.http
       .post<any>(
-        `${AppSettings.API_ENDPOINT}/oauth/token`, params.toString(), { headers: httpHeaders }
+        `${env.APP_ENDPOINT}/oauth/token`, params.toString(), { headers: httpHeaders }
       )
       .toPromise();
   }
 
-  //GUARDA TOKEN EN EL SESSION STORAGE
-  public saveTockenInSessionStorage(data: any): void {
-    sessionStorage.setItem('access_token', data.access_token);//convierte Objeto a JSON
-    sessionStorage.setItem('refresh_token', data.refresh_token);//convierte Objeto a JSON
-    sessionStorage.setItem('expires_in', data.expires_in);//convierte Objeto a JSON
-    this.saveUserInSessionStorage(JSON.parse(atob(data.access_token.split(".")[1])));
-  }
-
-  //GUARDA USUARIO EN EL SESSION STORAGE
-  private saveUserInSessionStorage(payload: any) {
+  //Guarda usuario en session storage
+  public saveUser(data: any) {
     let usuario = new Usuario();
-    usuario.userFromPayload(payload);
-    sessionStorage.setItem('usuario', JSON.stringify(usuario));//Convierte objeto JSON y lo guarda en el session sessionStorage
+    usuario.userFromPayload(data);
+    this.sessionService.setItem(env.USER_STORAGE, usuario);
   }
 
-  //METODO VALIDA USUARIO LOGEADO OBTIENE IFORMACION DEL SESSION STORAGE
-  public isLogin(): boolean {
-    return JSON.parse(sessionStorage.getItem('usuario')) ? true : false;//Valida sesion del usuario
-  }
-
-  //OBTIENE USUARIO LOGEADO, OBTIENE IFORMACION DEL SESSION STORAGE
+  //Obtiene usuario del session storage
   public getUser(): Usuario {
-    return JSON.parse(sessionStorage.getItem('usuario')) as Usuario;
+    const user = this.sessionService.getItem(env.USER_STORAGE);
+    return user ? JSON.parse(user) as Usuario : null;
   }
 
-  //OBTIENE LOS ROLES DEL USUARIOS, OBTIENE IFORMACION DEL SESSION STORAGE
-  public getRolesUser(): Role[] {
+  //Obtiene arreglo de roles
+  public getUserRoles(): Role[] {
     return this.getUser().roles;
   }
 
-  //VALIDA QUE EL SUARIO TENGA AL MENOS UN ROL DEL LISTADO DE ROLES RECIBIDOS
-  public validRoles(roles: string[]): boolean {
-    return this.getRolesUser().some(r => roles.find(x => x.toString() == r.toString()));
-  }
-
-  //METODO LIMPIA DATOS DE SESSION STORAGE
+  //Cierra sesion
   public logOut(): void {
-    console.log();
-    sessionStorage.clear();
-
+    this.sessionService.clear();
   }
 }

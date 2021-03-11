@@ -7,8 +7,15 @@ export class Usuario {
   apellido: string;
   email: string;
   roles: Role[] = [];
+  access_token: string;
+  refresh_token: string;
+  expires_in: string;
 
-  public userFromPayload(payload: any): void {
+  public userFromPayload(data: any): void {
+    let payload = JSON.parse(atob(data.access_token.split(".")[1]));
+    this.access_token = data.access_token
+    this.refresh_token = data.refresh_token;
+    this.expires_in = data.expires_in;
     this.id = payload.id;
     this.username = payload.user_name;
     this.nombre = payload.nombre;
