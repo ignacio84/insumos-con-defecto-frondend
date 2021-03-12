@@ -3,6 +3,8 @@ import { ConsultarInsumosInterface } from '../consultar-insumos.interface';
 import { TableConInsService } from '../table-con-ins/table-con-ins.service';
 import { InsumosModel } from '../../models-scanner/insumos.model'
 import { InsumoInterface } from '../table-con-ins/insumo.interface'
+import { FormConInsService } from '../form-con-ins/form-con-ins.service';
+import { Articulo } from '../../models-sap/articulo.model';
 
 
 @Component({
@@ -11,12 +13,14 @@ import { InsumoInterface } from '../table-con-ins/insumo.interface'
   styleUrls: ['./table-con-ins.component.css']
 })
 export class TableConInsComponent implements OnInit {
-
+  private articulos: Articulo[];
   public insumos: InsumosModel[];
   public insumosInterface: InsumoInterface[];
   @Input() public formConsultar: ConsultarInsumosInterface;
 
-  constructor(public tableConInsService: TableConInsService) { }
+  constructor(public tableConInsService: TableConInsService, private formConsInsService: FormConInsService) {
+    this.loadData();
+  }
 
   ngOnChanges(changes: any) {
     this.insumosInterface = []
@@ -46,26 +50,26 @@ export class TableConInsComponent implements OnInit {
     let prefix = (this.formConsultar.insumo === 'DPRO') ? 'Danada' : 'Defecto';//Se genera prefijo para generar el nombre de variable, dependeindo el tipo de insumo para
     switch (this.formConsultar.code) {
       case 'E10061': {
-        this.buildListInterface(prefix, 'CAJA PARA PIERNA S/H Y SUB PRODUCTOS', 'E10061');
+        this.buildListInterface(prefix, this.articulos.find(data => data.itemCode === 'E10061').itemName, 'E10061');
         break;
       }
       case 'E10067': {
-        this.buildListInterface(prefix, 'CAJA PARA PUERCO PRADOS 24 1/16" X 15 9/6" X 8 15/16"', 'E10067');
+        this.buildListInterface(prefix, this.articulos.find(data => data.itemCode === 'E10067').itemName, 'E10067');
         break;
       }
       case 'E10083': {
-        this.buildListInterface(prefix, 'CAJA PARA POLLO BOSQUITO PARA 10 KGS  C/WRA 4 TINTAS', 'E10083');
+        this.buildListInterface(prefix, this.articulos.find(data => data.itemCode === 'E10083').itemName, 'E10083');
         break;
       }
       case 'E10089': {
-        this.buildListInterface(prefix, 'CAJA MEDIANA PRADOS 19” 1/8 x 13” 1/16 x 8”  WRA ECT 32', 'E10089');
+        this.buildListInterface(prefix, this.articulos.find(data => data.itemCode === 'E10089').itemName, 'E10089');
         break;
       }
       case 'TODOS': {
-        this.buildListInterface(prefix, 'CAJA PARA PIERNA S/H Y SUB PRODUCTOS', 'E10061');
-        this.buildListInterface(prefix, 'CAJA PARA PUERCO PRADOS 24 1/16" X 15 9/6" X 8 15/16"', 'E10067');
-        this.buildListInterface(prefix, 'CAJA PARA POLLO BOSQUITO PARA 10 KGS  C/WRA 4 TINTAS', 'E10083');
-        this.buildListInterface(prefix, 'CAJA MEDIANA PRADOS 19” 1/8 x 13” 1/16 x 8”  WRA ECT 32', 'E10089');
+        this.buildListInterface(prefix, this.articulos.find(data => data.itemCode === 'E10061').itemName, 'E10061');
+        this.buildListInterface(prefix, this.articulos.find(data => data.itemCode === 'E10067').itemName, 'E10067');
+        this.buildListInterface(prefix, this.articulos.find(data => data.itemCode === 'E10083').itemName, 'E10083');
+        this.buildListInterface(prefix, this.articulos.find(data => data.itemCode === 'E10089').itemName, 'E10089');
         break;
       }
     }
@@ -78,6 +82,20 @@ export class TableConInsComponent implements OnInit {
       descripcion: description,
       quantity: this.insumos.reduce((a, b) => Number(a) + Number(b['cantidad' + prefix + name]), 0).toString()//Concatena strings para generar nombre de variable
     })
+  }
+
+  private loadData(): void {
+    this.formConsInsService.postArticulos()
+      .then(
+        data => {
+          this.articulos = data.articulos as Articulo[];
+        }
+      )
+      .catch(
+        error => {
+          console.log(error);
+        }
+      )
   }
 
   ngOnInit(): void {
