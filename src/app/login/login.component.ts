@@ -22,9 +22,9 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // console.log(CryptoJS.AES.encrypt('hola', 'hola').toString())
-    // console.log(CryptoJS.AES.decrypt('U2FsdGVkX1/jVUDoIn1UptfvD/ch5meZ8iZNu6Ucb5M=', 'hola').toString(CryptoJS.enc.Utf8));
-
+    if (this.authService.getUser()) {
+      this.router.navigate(['/con-ins']);
+    }
   }
 
   private buildForm(): void {
@@ -45,6 +45,7 @@ export class LoginComponent implements OnInit {
         })
       .catch(
         error => {
+          console.log(error);
           Swal.fire('Error', 'Usuario o contraseña no validos!', 'error');
         }
       )
